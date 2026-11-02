@@ -12,7 +12,8 @@ demo mode that plays a pretend sunny day, clouds and all.
 An ESP32 running MicroPython subscribes to MQTT topics, adds up the numbers and moves the needle.
 The old movement wants about 30 V for full scale, so a few cheap parts do the driving: an XL6009
 boost module, an LM324 op-amp and a 2N5551 transistor hold the coil current steady, and 100 Hz
-PWM from the ESP32 sets it. The whole story is on Instructables.
+PWM from the ESP32 sets it. The whole story is on
+[Instructables](https://www.instructables.com/Wireless-Voltmeter/).
 
 <img src="images/drive-circuit.jpg" width=100%>
 
@@ -41,7 +42,7 @@ To try the demo first, copy `pointer.py` and `demo.py`, then type `import demo` 
 - 1N4148 diode
 
 ## Build Instructions
-[Instructables link]
+https://www.instructables.com/Wireless-Voltmeter/
 
 Code: MIT licence. Photos and schematic: CC BY-SA 4.0.
 
