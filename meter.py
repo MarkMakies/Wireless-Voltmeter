@@ -3,12 +3,16 @@
 # It joins WiFi and the MQTT broker, adds up the PV power from the topics listed
 # in Secrets.py, and glides the pointer to watts ÷ 10 (600 on the dial = 6000 W).
 # The board's blue LED flashes as each message arrives.
+# At power-up it first does a self test: the pointer glides 0 to 200 to 400 to 600
+# and back down to 0, pausing on each mark.
 # Ctrl-C at the console stops it. Then you can type:
 #   dial(450)     glide the pointer to 450 on the dial (0 to 600)
 #   duty(50)      jump straight to 50 % duty (any number from 0 to 100)
 #   freq(1000)    change the PWM frequency to 1000 Hz
+#   self_test()   sweep up the dial and back again, as at power-up
 #   run()         start showing PV power again
 # History:
+#   v12 self test at power-up: 0 to 600 and back, 200 at a time
 #   v11 the blue LED flashes for each MQTT message
 #   v10 moves every 3 s, and a topic quiet for 10 s counts as 0: for a topic sent every 2 s
 #   v9 the topics to show live in Secrets.py
@@ -30,7 +34,7 @@ from umqtt.simple import MQTTClient
 import Secrets        # your WiFi, broker and topics: see SecretsExample.py
 from pointer import dial, duty, freq   # duty and freq are for the console
 
-VERSION = 11
+VERSION = 12
 
 # What to show: the number called KEY in each of the MQTT topics listed in
 # Secrets.py, added together, then divided by SCALE to give the dial reading.
@@ -46,11 +50,24 @@ CLIENT_ID = "Voltmeter"
 LED_PIN = 2           # the blue LED on the DEVKIT V1 board
 BLINK_MS = 100        # how long it flashes for each message
 
+# The self test at power-up: the pointer starts at 0 and glides to each of these
+# in turn, waiting HOLD_S seconds on each one.
+SELF_TEST = [200, 400, 600, 400, 200, 0]
+HOLD_S = 1
+
 led = Pin(LED_PIN, Pin.OUT, value=0)
 
 # The latest value from each topic, and when it arrived.
 latest = {}
 heard_at = {}
+
+
+def self_test():
+    # Sweep up the dial and back, so you can see the meter and drive circuit work.
+    print("Self test")
+    for reading in SELF_TEST:
+        dial(reading)
+        time.sleep(HOLD_S)
 
 
 def on_message(topic, message):
@@ -138,4 +155,5 @@ def run():
 
 
 print("meter version", VERSION)
+self_test()
 run()
