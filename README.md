@@ -50,6 +50,9 @@ To try the demo first, copy `pointer.py` and `demo.py`, then type `import demo` 
 ## Build Instructions
 https://www.instructables.com/Wireless-Voltmeter/
 
+- **Blog post:** <https://makies.com.au/wireless-voltmeter/>
+- **Video:** <https://youtu.be/yO76TPwoefI>
+
 Code: MIT licence. Photos and drawings: CC BY-SA 4.0.
 
 *More projects: https://makies.com.au*
