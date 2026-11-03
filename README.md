@@ -17,6 +17,10 @@ PWM from the ESP32 sets it. The whole story is on
 
 <img src="images/drive-circuit.jpg" width=100%>
 
+The same circuit as a wiring diagram, one colour for each connection:
+
+<img src="images/wiring-diagram.jpg" width=100%>
+
 ## Files
 - `pointer.py` moves the needle: the PWM, the calibration table and the glide. Recalibrate here.
 - `meter.py` joins WiFi and MQTT and shows the number. Copy it to the board as `main.py`.
@@ -45,6 +49,6 @@ To try the demo first, copy `pointer.py` and `demo.py`, then type `import demo` 
 ## Build Instructions
 https://www.instructables.com/Wireless-Voltmeter/
 
-Code: MIT licence. Photos and schematic: CC BY-SA 4.0.
+Code: MIT licence. Photos and drawings: CC BY-SA 4.0.
 
 *More projects: https://makies.com.au*
