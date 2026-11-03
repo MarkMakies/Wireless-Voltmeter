@@ -23,7 +23,8 @@ The same circuit as a wiring diagram, one colour for each connection:
 
 ## Files
 - `pointer.py` moves the needle: the PWM, the calibration table and the glide. Recalibrate here.
-- `meter.py` joins WiFi and MQTT and shows the number. Copy it to the board as `main.py`.
+- `meter.py` sweeps the dial as a self test at power-up, then joins WiFi and MQTT and shows
+  the number. Copy it to the board as `main.py`.
 - `demo.py` demo mode, no WiFi needed.
 - `physics.py` the needle jumping, then gliding along the S-curve: the video in the physics step.
 - `SecretsExample.py` copy to `Secrets.py` and fill in your WiFi, broker and topics.
