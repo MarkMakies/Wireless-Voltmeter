@@ -15,11 +15,11 @@ boost module, an LM324 op-amp and a 2N5551 transistor hold the coil current stea
 PWM from the ESP32 sets it. The whole story is on
 [Instructables](https://www.instructables.com/Wireless-Voltmeter/).
 
-<img src="images/drive-circuit.jpg" width=100%>
+<img src="images/drive-circuit-v6.jpg" width=100%>
 
 The same circuit as a wiring diagram, one colour for each connection:
 
-<img src="images/wiring-diagram.jpg" width=100%>
+<img src="images/wiring-diagram-v2.jpg" width=100%>
 
 ## Files
 - `pointer.py` moves the needle: the PWM, the calibration table and the glide. Recalibrate here.
