@@ -2,12 +2,15 @@
 # Copy it to the board as main.py, with pointer.py and your Secrets.py beside it.
 # It joins WiFi and the MQTT broker, adds up the PV power from the topics listed
 # in Secrets.py, and glides the pointer to watts ÷ 10 (600 on the dial = 6000 W).
+# The board's blue LED flashes as each message arrives.
 # Ctrl-C at the console stops it. Then you can type:
 #   dial(450)     glide the pointer to 450 on the dial (0 to 600)
 #   duty(50)      jump straight to 50 % duty (any number from 0 to 100)
 #   freq(1000)    change the PWM frequency to 1000 Hz
 #   run()         start showing PV power again
 # History:
+#   v11 the blue LED flashes for each MQTT message
+#   v10 moves every 3 s, and a topic quiet for 10 s counts as 0: for a topic sent every 2 s
 #   v9 the topics to show live in Secrets.py
 #   v8 pointer code moved to pointer.py, shared with demo.py
 #   v7 renamed from pwm-test.py; WiFi and MQTT, shows total PV power
@@ -21,12 +24,13 @@
 import time
 import json
 import network
+from machine import Pin
 from umqtt.simple import MQTTClient
 
 import Secrets        # your WiFi, broker and topics: see SecretsExample.py
 from pointer import dial, duty, freq   # duty and freq are for the console
 
-VERSION = 9
+VERSION = 11
 
 # What to show: the number called KEY in each of the MQTT topics listed in
 # Secrets.py, added together, then divided by SCALE to give the dial reading.
@@ -34,10 +38,15 @@ TOPICS = Secrets.TOPICS
 KEY = "PvW"           # PV power in watts
 SCALE = 10            # 6000 W = 600 on the dial
 
-UPDATE_S = 10         # move the pointer this often, in seconds
-STALE_S = 60          # a topic that's been quiet this long counts as 0
+UPDATE_S = 3          # move the pointer this often, in seconds: one glide
+STALE_S = 10          # a topic that's been quiet this long counts as 0; make it
+                      # longer than the gap between your messages (mine: 2 s)
 PING_S = 30           # tell the broker we're still here this often
 CLIENT_ID = "Voltmeter"
+LED_PIN = 2           # the blue LED on the DEVKIT V1 board
+BLINK_MS = 100        # how long it flashes for each message
+
+led = Pin(LED_PIN, Pin.OUT, value=0)
 
 # The latest value from each topic, and when it arrived.
 latest = {}
@@ -46,6 +55,11 @@ heard_at = {}
 
 def on_message(topic, message):
     # The MQTT library calls this for every message on our topics.
+    # Flash the blue LED to show data arriving.
+    led.on()
+    time.sleep_ms(BLINK_MS)
+    led.off()
+
     topic = topic.decode()
     data = json.loads(message.decode())
     if KEY in data:
